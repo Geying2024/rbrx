@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>熔冰铁心 - 人物卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* 可根据需要添加自定义样式 */
+        .faction-card {
+            transition: all 0.3s ease;
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .faction-card:hover {
+            transform: perspective(1000px) rotateY(5deg) translateY(-5px);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#111827',
+                        secondary: '#e5e7eb',
+                        accent: '#3b82f6',
+                        steam: '#4b5563',
+                        frost: '#94a3b8',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Bangers', 'cursive'],
+                        steam: ['Special Elite', 'cursive']
+                    },
+                    backgroundImage: {
+                        'industrial-pattern': "url('https://picsum.photos/id/1067/1920/1080')",
+                        'hero-pattern': "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url('https://picsum.photos/id/1036/1920/1080')"
+                    },
+                    keyframes: {
+                        steam: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)', opacity: '0.7' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-secondary text-primary antialiased">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <nav class="bg-primary/90 text-white shadow-lg">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex justify-between items-center">
+                    <a href="#" class="flex items-center space-x-2">
+                        <!-- 替换为图片Logo -->
+                        <img src="logo.jpg" alt="熔冰铁心Logo" 
+                             class="w-10 h-10 rounded-full object-cover" 
+                             style="border: 2px solid #000000; box-shadow: 0 0 4px rgba(0,0,0,0.3);">
+                        <span class="text-xl font-steam tracking-wider">熔冰铁心</span>
+                    </a>
+                    <!-- 桌面导航 -->
+                    <div class="hidden md:flex space-x-8">
+                        <a href="index.html" class="font-medium hover:text-accent transition-colors duration-200">首页</a>
+                        <a href="plot-review.html" class="font-medium hover:text-accent transition-colors duration-200">剧情回顾</a>
+                        <a href="characters.html" class="font-medium hover:text-accent transition-colors duration-200 border-b-2 border-accent">人物卡</a>
+                        <a href="gallery.html" class="font-medium hover:text-accent transition-colors duration-200">同人作品</a>
+                    </div>
+                    <!-- 移动端菜单按钮 -->
+                    <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+                        <i class="fa fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                <!-- 移动端导航菜单 -->
+                <div id="mobileMenu" class="md:hidden hidden mt-4 pb-2 space-y-3">
+                    <a href="index.html" class="font-medium hover:text-accent transition-colors duration-200">首页</a>
+                    <a href="plot-review.html" class="font-medium hover:text-accent transition-colors duration-200">剧情回顾</a>
+                    <a href="characters.html" class="font-medium hover:text-accent transition-colors duration-200 border-b-2 border-accent">人物卡</a>
+                    <a href="gallery.html" class="font-medium hover:text-accent transition-colors duration-200">同人作品</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主标题区域 -->
+    <div class="pt-24 pb-16 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-6xl font-display tracking-wider mb-6">拉莫迪亚人物卡</h1>
+                <p class="text-xl text-gray-300 mb-8">了解拉莫迪亚世界中各位角色的详细信息。</p>
+                <div class="w-32 h-1 bg-accent mx-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 人物卡区域 -->
+    <section class="py-20 bg-primary text-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- 角色卡片 1 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="lgls.jpg" alt="雷古路斯·阿玛尔吉" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">雷古路斯·阿玛尔吉</h3>
+                            <p class="text-accent">奇械师 - 炼金师</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自卢登多夫的生物世家，却天天痴迷于炼金的艺术。因为被抓到实验室而错过了卢登多夫大学的期末考试，被迫大学肄业。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 175cm</span>
+                            <span>年龄: 18岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 2 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="ss.jpg" alt="萨沙·菲舍尔" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">萨沙·菲舍尔</h3>
+                            <p class="text-accent">奇械师 - 神枪手</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自纽弗什滕堡的奇械师，自幼被爷爷抚养长大，右臂和部分器官被替换为了机械器官，电波而自尊心强的小女孩。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 150cm</span>
+                            <span>年龄: 16岁</span>
+                            <span>性别: 女</span>
+                            <span>阵营: 混乱中立</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 3 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="aew.jpg" alt="埃尔温·弗兰肯斯坦" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">埃尔温·弗兰肯斯坦</h3>
+                            <p class="text-accent">战士 - 奥法骑士</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自费伦的奥法骑士，因为实验爆炸意外掉进了拉莫迪亚。永远的欧皇，似乎对力竭训练法和巨武器大师很有自己的理解。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 180cm</span>
+                            <span>年龄: 22岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 4 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="nrs.jpg" alt="纳瑞斯·玛伊" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">纳瑞斯·玛伊</h3>
+                            <p class="text-accent">牧师 - 知识领域</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自费伦的牧师，曾在费伦学法术时挂了十科而被退学后投奔知识之神，希望能让知识直接进脑子。思维跳脱的野史王，间歇性发作神经病。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 176cm</span>
+                            <span>年龄: 19岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 5 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="stly.jpg" alt="斯塔利亚·玛伊" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">斯塔利亚·玛伊</h3>
+                            <p class="text-accent">邪术师 - 巨灵宗主</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自费伦的邪术师，曾在费伦学法术时挂了十科而被退学后出门远行，在差点失身后被宗主拯救成为了邪术师。灵动欢快的感情骗子，乐于捉弄同伴和其他家伙们。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 176cm</span>
+                            <span>年龄: 19岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 6 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="角色卡/lan.jpg" alt="莉安娜" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">莉安娜</h3>
+                            <p class="text-accent">奇械师 - 装甲师</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            熔火的重要成员，铁骑系统为数不多的天生适格者，前辈曾参与铁骑计划，冒险者的重要伙伴。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 170cm</span>
+                            <span>年龄: 21岁</span>
+                            <span>性别: 女</span>
+                            <span>阵营: 中立善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 7 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="角色卡/bln.jpg" alt="伯罗纳" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">伯罗纳·梅塔莫尔（拉金霍姆）</h3>
+                            <p class="text-accent">法师 - 书士会/奇械师 - 炼金师</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            越穹结社的重要成员，曾被暗影女王的使者附身，在卢登多夫大学犯下大错后来到结社，后成为冒险者的重要同伴。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 175cm</span>
+                            <span>年龄: 22岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 中立善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 8 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="角色卡/asmy.jpg" alt="阿斯米娅" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">阿斯米娅</h3>
+                            <p class="text-accent">奇械师 - 战地匠师</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            天才奇械师少女，曼奇斯的机械师，博士的助手，刺杀博士失败后随冒险者逃走。随心所欲，自由自在。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 155cm</span>
+                            <span>年龄: 18岁</span>
+                            <span>性别: 女</span>
+                            <span>阵营: 混乱中立</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 9 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="角色卡/slh.jpg" alt="萨拉赫" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">萨拉赫</h3>
+                            <p class="text-accent">游荡者 - 盗贼/奇械师 - 魔炮手</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            男爵亲卫队成员，对正义和善良有自己的理解，其养父为铁骑计划的参与者，后将手中遗留的变身器交与冒险者。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 176cm</span>
+                            <span>年龄: 29岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 中立善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 10 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="角色卡/博士.jpg" alt="莫登海姆博士" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">莫登海姆博士</h3>
+                            <p class="text-accent">奇械师 - 科学怪人</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            拉莫迪亚的“救世主”，科学成就斐然，引领着整个科研潮流。实则对一切都不关心，唯独钟情于伊莉丝，对其加之以疯狂的“爱”。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 可变</span>
+                            <span>年龄: 不详</span>
+                            <span>性别: 女</span>
+                            <span>阵营: 混乱邪恶</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 11 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="角色卡/stl.jpg" alt="施特罗·冯·奥布雷克" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">施特罗·冯·奥布雷克</h3>
+                            <p class="text-accent">吟游诗人 - 创造学派</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            名义上的现奥布雷克男爵，斯塔尔曼的弟弟，125年灵魂提取实验失败后变成企鹅游荡在冰原，直到被冒险者们从白幕后找回。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 176cm</span>
+                            <span>年龄: 23岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 中立善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 12 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="角色卡/xy.jpg" alt="西娅·多特" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">西娅·多特</h3>
+                            <p class="text-accent">德鲁伊 - 大地结社</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自费伦的异乡人，曾与利奥纳多、斯塔尔曼、施特罗三人熟识，后在漫长的孤独和接二连三的打击下向暗影女王屈服，百年后被冒险者、施特罗和斯塔尔曼一起救回。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 167cm</span>
+                            <span>年龄: 不详</span>
+                            <span>性别: 女</span>
+                            <span>阵营: 中立善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 13 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="stem.jpg" alt="斯塔尔曼·冯·奥布雷克" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">斯塔尔曼·冯·奥布雷克</h3>
+                            <p class="text-accent">法师 - 预言学派</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            前代奥布雷克男爵，废除人体实验改革的推行者，124年死于企业刺杀，其后以先知的形式存在，仍然假借施特罗的名义暗中控制着男爵亲卫队。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 174cm</span>
+                            <span>年龄: 不详</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 中立善良</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 角色卡片 14 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="mxl.jpg" alt="利奥纳多·马西伦" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">利奥纳多·马西伦</h3>
+                            <p class="text-accent">奇械师 - 战地匠师</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            熔火的创始人之一，125年带领旧滕堡人民起义并建立了新滕堡。大奇械师，利昂和灰烬机关的创造者，机械器官技术的发明者，斯塔尔曼和施特罗的义兄。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 174cm</span>
+                            <span>年龄: 不详</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 蒸汽朋克装饰分隔线 -->
+    <div class="relative h-16 bg-primary">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-1 bg-accent relative">
+                <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+                <div class="absolute -right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-primary');
+                navbar.classList.remove('bg-primary/90');
+            } else {
+                navbar.classList.add('bg-primary/90');
+                navbar.classList.remove('bg-primary');
+            }
+        });
+    </script>
+</body>
+
+</html>

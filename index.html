@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>熔冰铁心 - DND长团纪念</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#111827',
+                        secondary: '#e5e7eb',
+                        accent: '#3b82f6',
+                        steam: '#4b5563',
+                        frost: '#94a3b8',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Bangers', 'cursive'],
+                        steam: ['Special Elite', 'cursive']
+                    },
+                    backgroundImage: {
+                        'industrial-pattern': "url('https://picsum.photos/id/1067/1920/1080')",
+                        'hero-pattern': "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.4)), url('https://picsum.photos/id/1036/1920/1080')"
+                    },
+                    keyframes: {
+                        steam: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)', opacity: '0.7' },
+                            '50%': { transform: 'translateY(-10px) rotate(2deg)', opacity: '0.4' },
+                        }
+                    },
+                    animation: {
+                        steam: 'steam 4s ease-in-out infinite',
+                    }
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .text-shadow-lg {
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            }
+            .border-steam {
+                border-image: repeating-linear-gradient(45deg, #4b5563, #6b7280 10px) 1;
+            }
+            .bg-frosted {
+                backdrop-filter: blur(8px);
+            }
+            .scrollbar-hidden::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hidden {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .modal-enter {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            .modal-enter-active {
+                opacity: 1;
+                transform: scale(1);
+                transition: opacity 300ms, transform 300ms;
+            }
+            .modal-exit {
+                opacity: 1;
+            }
+            .modal-exit-active {
+                opacity: 0;
+                transition: opacity 300ms;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+</head>
+<body class="bg-secondary text-primary antialiased">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <nav class="bg-primary/90 text-white shadow-lg">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex justify-between items-center">
+                    <a href="#" class="flex items-center space-x-2">
+                        <!-- 替换为图片Logo -->
+                        <img src="logo.jpg" alt="熔冰铁心Logo" 
+                             class="w-10 h-10 rounded-full object-cover" 
+                             style="border: 2px solid #000000; box-shadow: 0 0 4px rgba(0,0,0,0.3);">
+                        <span class="text-xl font-steam tracking-wider">熔冰铁心</span>
+                    </a>
+                    
+                    <!-- 桌面导航 -->
+                    <div class="hidden md:flex space-x-8">
+                        <a href="index.html" class="font-medium hover:text-accent transition-colors duration-200 border-b-2 border-accent">首页</a>
+                        <a href="plot-review.html" class="font-medium hover:text-accent transition-colors duration-200">剧情回顾</a>
+                        <a href="characters.html" class="font-medium hover:text-accent transition-colors duration-200">人物卡</a>
+                        <a href="gallery.html" class="font-medium hover:text-accent transition-colors duration-200">同人作品</a>
+                    </div>
+                    
+                    <!-- 移动端菜单按钮 -->
+                    <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+                        <i class="fa fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                
+                <!-- 移动端导航菜单 -->
+                <div id="mobileMenu" class="md:hidden hidden mt-4 pb-2 space-y-3">
+                    <a href="index.html" class="font-medium hover:text-accent transition-colors duration-200 border-b-2 border-accent">首页</a>
+                        <a href="plot-review.html" class="font-medium hover:text-accent transition-colors duration-200">剧情回顾</a>
+                        <a href="characters.html" class="font-medium hover:text-accent transition-colors duration-200">人物卡</a>
+                        <a href="gallery.html" class="font-medium hover:text-accent transition-colors duration-200">同人作品</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="relative h-screen flex items-center justify-center bg-hero-pattern bg-cover bg-center">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/70 to-primary/40"></div>
+        <div class="container mx-auto px-4 z-10 text-center">
+            <div class="max-w-4xl mx-auto">
+                <div class="inline-block mb-4 animate-steam">
+                    <div class="relative">
+                        <span class="text-[clamp(2.5rem,5vw,4rem)] font-display tracking-wider text-white text-shadow-lg">熔冰铁心</span>
+                        <div class="absolute -bottom-1 left-0 w-full h-1 bg-accent"></div>
+                    </div>
+                </div>
+                <p class="text-[clamp(1.2rem,2vw,1.5rem)] text-white text-shadow mb-8 max-w-3xl mx-auto">
+                    一场关于希望、勇气与爱的冒险，在永冻冰原上燃起的星星之火
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#story" class="px-8 py-3 bg-accent text-white font-medium rounded-md hover:bg-accent/90 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        探索剧情
+                    </a>
+                    <a href="#characters" class="px-8 py-3 bg-transparent border-2 border-white text-white font-medium rounded-md hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
+                        认识角色
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#story" class="text-white opacity-80 hover:opacity-100 transition-opacity">
+                <i class="fa fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 蒸汽朋克装饰分隔线 -->
+    <div class="relative h-16 bg-primary">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-1 bg-accent relative">
+                <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+                <div class="absolute -right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 故事简介 -->
+    <section id="story" class="py-20 bg-secondary">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-display tracking-wider text-primary mb-4">剧情回顾</h2>
+                <div class="w-20 h-1 bg-accent mx-auto"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <h3 class="text-2xl font-steam mb-4 text-primary">永冻纪元的希望火种</h3>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        拉莫迪亚，一个被冰雪和变异怪物覆盖的世界。在这里，自然的威胁从未消散，寒冷鬼魅般如影随形，辐射更是悄无声息地侵蚀着一切。为了生存，人们发展出了违背人性的科学。
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        你们，背景各异的冒险者，一无所有地在实验室睁开了眼睛。怀揣着各自的目的与信念，在这片危机四伏的世界里，你们将如何应对各方势力的博弈，又能否在寒冷与辐射的双重威胁下寻得希望的曙光？去影响、去改变、去拯救这个世界吧，冒险者们！。
+                    </p>
+                    <div class="flex space-x-4 mt-8">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center mr-3">
+                                <i class="fa fa-book text-white"></i>
+                            </div>
+                            <span class="font-medium">100h+的冒险</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center mr-3">
+                                <i class="fa fa-users text-white"></i>
+                            </div>
+                            <span class="font-medium">5位勇敢冒险者</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2 relative">
+                    <div class="relative z-10 rounded-lg overflow-hidden shadow-2xl transform transition-transform duration-300 hover:scale-[1.02]">
+                        <img src="滕堡.jpg" alt="滕堡" class="w-full h-auto">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end">
+                            <div class="p-6">
+                                <h4 class="text-xl font-medium text-white mb-2">纽弗什滕堡</h4>
+                                <p class="text-white/80 text-sm">深埋于冰雪和岩层下的地下城市</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-40 h-40 border-2 border-steam rounded-lg z-0"></div>
+                    <div class="absolute -top-6 -left-6 w-40 h-40 border-2 border-steam rounded-lg z-0"></div>
+                </div>
+            </div>
+            
+            <div class="mt-20">
+                <h3 class="text-2xl font-steam mb-8 text-center text-primary">主要章节</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                        <div class="h-48 overflow-hidden">
+                            <img src="序章.jpg" alt="序章" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-medium mb-2 text-primary">序章：逃离实验室</h4>
+                            <p class="text-gray-600 text-sm mb-4">冒险者们一无所有地从实验室中醒来，面对如此窘境，冒险者要如何在残酷的拉莫迪亚生存下去，同时弄清身上奇怪纹身的秘密？</p>
+                            
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                        <div class="h-48 overflow-hidden">
+                            <img src="mxl.jpg" alt="纽弗什滕堡篇" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-medium mb-2 text-primary">第一章：纽弗什滕堡篇</h4>
+                            <p class="text-gray-600 text-sm mb-4">逃离实验室后，冒险者开始在滕堡艰难求生。熔火、越穹结社、旧纽弗什滕堡……冒险者掀开了世界秘密的一角。</p>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                        <div class="h-48 overflow-hidden">
+                            <img src="第二章.jpg" alt="卢登多夫篇" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-medium mb-2 text-primary">第二章：卢登多夫篇</h4>
+                            <p class="text-gray-600 text-sm mb-4">熔火向卢登多夫宣战？！冒险者匆匆赶往卢登多夫。菌黄水晶、锚点、灰烬机关……世界的秘密逐渐向冒险者敞开了怀抱。</p>
+                            
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                        <div class="h-48 overflow-hidden">
+                            <img src="死亡一指.jpg" alt="锚点篇" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-medium mb-2 text-primary">第三章：锚点篇</h4>
+                            <p class="text-gray-600 text-sm mb-4">从利奥纳多·马西伦的遗物中，冒险者们了解到拉莫迪亚十个锚点的秘密。为了拯救拉莫迪亚，冒险者再度踏上冰原，与命运开展新的斗争。</p>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                        <div class="h-48 overflow-hidden">
+                            <img src="第四章.jpg" alt="大决战" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-medium mb-2 text-primary">第四章：大决战</h4>
+                            <p class="text-gray-600 text-sm mb-4">告别白幕，冒险者们却得知卢登多夫正在进行大屠杀？！毫无头绪下，冒险者只得决定先杀了博士。只要博士死了，一切都会好起来的，吗？</p>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="plot-review.html" class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary/90 transition-all duration-300">
+                        查看全部剧情 <i class="fa fa-long-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 蒸汽朋克装饰分隔线 -->
+    <div class="relative h-16 bg-primary">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-1 bg-accent relative">
+                <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+                <div class="absolute -right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 角色预览 -->
+    <section id="characters" class="py-20 bg-primary text-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-display tracking-wider mb-4">主要角色</h2>
+                <div class="w-20 h-1 bg-accent mx-auto"></div>
+                <p class="mt-4 text-gray-300 max-w-2xl mx-auto">
+                    认识这些在永冻世界中为希望而战的冒险者们，每个人都有自己的故事、动机和个性。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- 角色卡片 1 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="lgls.jpg" alt="雷古路斯·阿玛尔吉" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">雷古路斯·阿玛尔吉</h3>
+                            <p class="text-accent">奇械师 - 炼金师</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自卢登多夫的生物世家，却天天痴迷于炼金的艺术。因为被抓到实验室而错过了卢登多夫大学的期末考试，被迫大学肄业。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 175cm</span>
+                            <span>年龄: 18岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 角色卡片 2 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="ss.jpg" alt="萨沙·菲舍尔" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">萨沙·菲舍尔</h3>
+                            <p class="text-accent">奇械师 - 神枪手</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自纽弗什滕堡的奇械师，自幼被爷爷抚养长大，右臂和部分器官被替换为了机械器官，电波而自尊心强的小女孩。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 150cm</span>
+                            <span>年龄: 16岁</span>
+                            <span>性别: 女</span>
+                            <span>阵营: 混乱中立</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 角色卡片 3 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="aew.jpg" alt="埃尔温·弗兰肯斯坦" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">埃尔温·弗兰肯斯坦</h3>
+                            <p class="text-accent">战士 - 奥法骑士</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自费伦的奥法骑士，因为实验爆炸意外掉进了拉莫迪亚。永远的欧皇，似乎对力竭训练法和巨武器大师很有自己的理解。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 180cm</span>
+                            <span>年龄: 22岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 角色卡片 4 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="nrs.jpg" alt="纳瑞斯·玛伊" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">纳瑞斯·玛伊</h3>
+                            <p class="text-accent">牧师 - 知识领域</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自费伦的牧师，曾在费伦学法术时挂了十科而被退学后投奔知识之神，希望能让知识直接进脑子。思维跳脱的野史王，间歇性发作神经病。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 176cm</span>
+                            <span>年龄: 19岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 角色卡片 5 -->
+                <div class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 transition-all duration-300 hover:border-accent/50 hover:-translate-y-2">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="stly.jpg" alt="斯塔利亚·玛伊" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h3 class="text-xl font-medium">斯塔利亚·玛伊</h3>
+                            <p class="text-accent">邪术师 - 巨灵宗主</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-300 mb-4">
+                            来自费伦的邪术师，曾在费伦学法术时挂了十科而被退学后出门远行，在差点失身后被宗主拯救成为了邪术师。灵动欢快的感情骗子，乐于捉弄同伴和其他家伙们。
+                        </p>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>身高: 176cm</span>
+                            <span>年龄: 19岁</span>
+                            <span>性别: 男</span>
+                            <span>阵营: 混乱善良</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="characters.html" class="inline-flex items-center px-6 py-3 bg-white text-primary font-medium rounded-md hover:bg-gray-100 transition-all duration-300">
+                    查看全部角色 <i class="fa fa-user-circle ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 蒸汽朋克装饰分隔线 -->
+    <div class="relative h-16 bg-primary">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-1 bg-accent relative">
+                <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+                <div class="absolute -right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 同人作品预览 -->
+    <section id="gallery" class="py-20 bg-secondary">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-display tracking-wider text-primary mb-4">同人作品</h2>
+                <div class="w-20 h-1 bg-accent mx-auto"></div>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                    探索由dm和pl创作的精彩艺术、故事和其他作品，见证《熔冰铁心》在每个人心中的独特呈现。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 作品卡片 1 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                    <img src="挤一挤.jpg" alt="挤一挤" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-xl font-medium text-white mb-2">挤一挤</h3>
+                        <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                        <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="挤一挤.jpg">查看全图</button>
+                    </div>
+                </div>
+                
+                <!-- 作品卡片 2 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                    <img src="欢迎回来！.jpg" alt="欢迎回来！" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-xl font-medium text-white mb-2">欢迎回来！</h3>
+                        <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                        <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="欢迎回来！.jpg">查看全图</button>
+                    </div>
+                </div>
+                
+                <!-- 作品卡片 3 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                    <img src="可我只是一只企鹅.jpg" alt="可我只是一只企鹅" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-xl font-medium text-white mb-2">可我只是一只企鹅</h3>
+                        <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                        <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="可我只是一只企鹅.jpg">查看全图</button>
+                    </div>
+                </div>
+                
+                <!-- 作品卡片 4 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                    <img src="死亡一指.jpg" alt="死亡一指" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-xl font-medium text-white mb-2">死亡一指</h3>
+                        <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                        <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="死亡一指.jpg">查看全图</button>
+                    </div>
+                </div>
+                
+                <!-- 作品卡片 5 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                    <img src="耶！全都不会做！.jpg" alt="耶！全都不会做！" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-xl font-medium text-white mb-2">耶！全都不会做！</h3>
+                        <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                        <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="耶！全都不会做！.jpg">查看全图</button>
+                    </div>
+                </div>
+                
+                <!-- 作品卡片 6 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                    <img src="我好想你.jpg" alt="我好想你" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-xl font-medium text-white mb-2">我好想你</h3>
+                        <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                        <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="我好想你.jpg">查看全图</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="gallery.html" class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary/90 transition-all duration-300">
+                    浏览全部作品 <i class="fa fa-image ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 模态框 -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden justify-center items-center z-50 transition-opacity duration-300 flex">
+        <div class="relative max-w-6xl w-full flex justify-center items-center">
+            <img id="modalImage" class="max-h-[85vh] max-w-full object-contain" src="" alt="Full Image">
+            <button id="closeModal" class="absolute top-4 right-4 text-white text-2xl focus:outline-none hover:text-accent transition-colors duration-200">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 蒸汽朋克装饰分隔线 -->
+    <div class="relative h-16 bg-primary">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-1 bg-accent relative">
+                <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+                <div class="absolute -right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full bg-accent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-primary');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-primary');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 如果是移动菜单，点击后关闭
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // 查看全图功能
+        const viewFullImageButtons = document.querySelectorAll('.view-full-image');
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const closeModal = document.getElementById('closeModal');
+
+        viewFullImageButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const imageSrc = button.getAttribute('data-src');
+                modalImage.src = imageSrc;
+                imageModal.classList.remove('hidden');
+            });
+        });
+
+        closeModal.addEventListener('click', () => {
+            imageModal.classList.add('hidden');
+        });
+
+        imageModal.addEventListener('click', (e) => {
+            if (e.target === imageModal) {
+                imageModal.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

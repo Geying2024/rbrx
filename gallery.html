@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>熔冰铁心 - 同人作品</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* 自定义样式 */
+        .art-card {
+            transition: all 0.3s ease;
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .art-card:hover {
+            transform: perspective(1000px) rotateY(5deg) translateY(-5px);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.3);
+        }
+
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: 1.5rem;
+            grid-auto-flow: dense;
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+
+        .masonry-item img {
+            width: 100%;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .art-filter-btn.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            z-index: 1001;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#111827',
+                        secondary: '#e5e7eb',
+                        accent: '#3b82f6',
+                        steam: '#4b5563',
+                        frost: '#94a3b8',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Bangers', 'cursive'],
+                        steam: ['Special Elite', 'cursive']
+                    },
+                    backgroundImage: {
+                        'industrial-pattern': "url('https://picsum.photos/id/1067/1920/1080')",
+                        'hero-pattern': "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url('https://picsum.photos/id/1036/1920/1080')"
+                    },
+                    keyframes: {
+                        steam: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)', opacity: '0.7' },
+                        }
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const artCards = document.querySelectorAll('.art-card');
+            const artFilterBtns = document.querySelectorAll('.art-filter-btn');
+            const authorFilterBtns = document.querySelectorAll('.author-filter-btn');
+
+            // 作品类型筛选
+            artFilterBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const filter = this.dataset.filter;
+                    artFilterBtns.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    artCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // 作者筛选
+            authorFilterBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const author = this.dataset.author;
+                    authorFilterBtns.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    artCards.forEach(card => {
+                        const cardAuthor = card.querySelector('p').textContent.split('by ')[1];
+                        if (author === 'all' || cardAuthor === author) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+
+<body class="bg-secondary text-primary antialiased">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <nav class="bg-primary/90 text-white shadow-lg">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex justify-between items-center">
+                    <a href="#" class="flex items-center space-x-2">
+                        <!-- 替换为图片Logo -->
+                        <img src="logo.jpg" alt="熔冰铁心Logo" 
+                             class="w-10 h-10 rounded-full object-cover" 
+                             style="border: 2px solid #000000; box-shadow: 0 0 4px rgba(0,0,0,0.3);">
+                        <span class="text-xl font-steam tracking-wider">熔冰铁心</span>
+                    </a>
+                    <!-- 桌面导航 -->
+                    <div class="hidden md:flex space-x-8">
+                        <a href="index.html" class="font-medium hover:text-accent transition-colors duration-200">首页</a>
+                        <a href="plot-review.html" class="font-medium hover:text-accent transition-colors duration-200">剧情回顾</a>
+                        <a href="characters.html" class="font-medium hover:text-accent transition-colors duration-200">人物卡</a>
+                        <a href="gallery.html" class="font-medium hover:text-accent transition-colors duration-200 border-b-2 border-accent">同人作品</a>
+                    </div>
+                    <!-- 移动端菜单按钮 -->
+                    <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+                        <i class="fa fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                <!-- 移动端导航菜单 -->
+                <div id="mobileMenu" class="md:hidden hidden mt-4 pb-2 space-y-3">
+                    <a href="index.html" class="font-medium hover:text-accent transition-colors duration-200">首页</a>
+                    <a href="plot-review.html" class="font-medium hover:text-accent transition-colors duration-200">剧情回顾</a>
+                    <a href="characters.html" class="font-medium hover:text-accent transition-colors duration-200">人物卡</a>
+                    <a href="gallery.html" class="font-medium hover:text-accent transition-colors duration-200">同人作品</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主标题区域 -->
+    <div class="pt-24 pb-16 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-6xl font-display tracking-wider mb-6">熔冰铁心同人作品</h1>
+                <p class="text-xl text-gray-300 mb-8">探索dm和pl创作的精彩内容，分享你关于拉莫迪亚的一切想象。</p>
+                <div class="w-32 h-1 bg-accent mx-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 同人作品区域 -->
+    <section class="py-20 bg-primary text-white">
+        <div class="container mx-auto px-4">
+            <!-- 作品筛选 -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-display mb-8 text-center">作品分类</h2>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button class="art-filter-btn active px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-filter="all">全部作品</button>
+                    <button class="art-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-filter="illustration">同人图</button>
+                    <button class="art-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-filter="fanfic">同人文（野史）</button>
+                    <button class="art-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-filter="video">replay</button>
+                </div>
+            </div>
+
+            <!-- 作者筛选 -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-display mb-8 text-center">作者筛选</h2>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button class="author-filter-btn active px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-author="all">全部作者</button>
+                    <button class="author-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-author="很坏的猫">很坏的猫</button>
+                    <button class="author-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-author="鬼叶子">鬼叶子</button>
+                    <button class="author-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-author="景见">景见</button>
+                    <button class="author-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-author="鸽子猫">鸽子猫</button>
+                    <button class="author-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-author="小猫咪">小猫咪</button>
+                    <button class="author-filter-btn px-6 py-2 bg-gray-700 hover:bg-accent text-white rounded-md transition-all duration-200" data-author="鸣鸟">鸣鸟</button>
+                </div>
+            </div>
+
+            <!-- 插画作品展示 -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-display mb-6 flex items-center">
+                    <span class="bg-accent text-white px-3 py-1 rounded mr-3">同人图</span>
+                    
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 插画作品1 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/好想拥抱你.jpg" alt="好想拥抱你" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">好想拥抱你</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/好想拥抱你.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品2 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/有时候真是怕了自己了.jpg" alt="有时候真是怕了自己了" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">有时候真是怕了自己了</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/有时候真是怕了自己了.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品3 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/欢迎回来.jpg" alt="欢迎回来" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">欢迎回来</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/欢迎回来.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品4 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/萨拉赫先生…….jpg" alt="萨拉赫先生……" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">萨拉赫先生……</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/萨拉赫先生…….jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品5 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a1.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a1.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品6 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a2.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a2.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品7 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a3.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a3.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品8 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/b1.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/b1.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品9 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c1.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c1.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品10 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/冒险者野史会.jpg" alt="冒险者野史会" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">冒险者野史会</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/冒险者野史会.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品11 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/可我只是一只企鹅.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">可我只是一只企鹅</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/可我只是一只企鹅.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品12 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/同桌的你.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">同桌的你</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/同桌的你.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品13 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/命运之轮.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">命运之轮</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/命运之轮.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品14 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/噢，水滴鱼。.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">噢，水滴鱼。</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/噢，水滴鱼。.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品15 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/神经病对神经病.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">神经病对神经病</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/神经病对神经病.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品16 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/百岁光阴如梦蝶.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">百岁光阴如梦蝶</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/百岁光阴如梦蝶.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品17 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a4.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a4.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品18 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c2.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c2.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品19 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a5.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a5.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品20 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/d1.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/d1.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品21 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c3.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c3.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品22 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/人总要勇敢一次吧.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">人总要勇敢一次吧</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/人总要勇敢一次吧.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品23 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/对不起，我是产品姐.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">对不起，我是产品姐</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/对不起，我是产品姐">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品24 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/愚人节快乐之lgls你怎么变小了.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">愚人节快乐之lgls你怎么变小了</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/愚人节快乐之lgls你怎么变小了.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品25 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/我好想你.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">我好想你</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/我好想你.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品26 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/死亡一指.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">死亡一指</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/死亡一指.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品27 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/耶！全都不会做！.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">耶！全都不会做！</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/耶！全都不会做！.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品28 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/颤抖.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">颤抖</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/颤抖.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品29 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/你像一句美丽的口号挥不去.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">你像一句美丽的口号挥不去</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/你像一句美丽的口号挥不去.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品30 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/呐，伯罗纳.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">呐，伯罗纳</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/呐，伯罗纳.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品31 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/囚徒的地狱.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">囚徒的地狱</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/囚徒的地狱.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品32 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/姐姐扎辫子.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">姐姐扎辫子</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/姐姐扎辫子.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品33 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a6.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a6.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品34 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a7.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a7.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品35 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a8.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a8.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品36 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/d2.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/d2.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品37 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/d3.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/d3.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品38 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/d4.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/d4.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品39 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a9.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a9.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品40 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a10.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a10.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品41 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a11.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a11.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品42 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a12.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a12.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品43 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a13.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a13.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品44 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c4.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c4.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品45 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c5.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c5.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品46 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c6.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c6.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品47 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/d5.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/d5.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品48 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/保护我方大学生.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">保护我方大学生</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/保护我方大学生.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品49 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a14.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a14.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品50 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/a15.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/a15.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品51 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/b2.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鬼叶子</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/b2.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品52 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c7.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c7.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品53 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c8.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c8.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品54 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/d6.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/d6.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品55 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/d7.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 很坏的猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/d7.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品56 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/大奇械师就应该穿奇械师jk.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">大奇械师就应该穿奇械师jk</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/大奇械师就应该穿奇械师jk.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品57 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/c9.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2"></h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/c9.jpg">查看全图</button>
+                        </div>
+                    </div>
+                    <!-- 插画作品58 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="illustration">
+                        <img src="同人图/晚安。.jpg" alt="" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">晚安。</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <button class="px-4 py-2 bg-accent text-white rounded-md mt-2 view-full-image" data-src="同人图/晚安。.jpg">查看全图</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 小说作品展示 -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-display mb-6 flex items-center">
+                    <span class="bg-accent text-white px-3 py-1 rounded mr-3">同人文（野史）</span>
+                   
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 小说作品1：欧皇角斗场成名战 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/1欧皇角斗场成名战.jpeg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">欧皇角斗场成名战</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 小猫咪</p>
+                            <a href="同人图/1欧皇角斗场成名战.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品2-->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/拉莫迪亚一千零一夜.jpeg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">拉莫迪亚一千零一夜</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 小猫咪</p>
+                            <a href="同人图/拉莫迪亚一千零一夜.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品3 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/第一部·爱在启明前 主角：西娅-25.2.13.jpeg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">第一部·爱在启明前 主角：西娅</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 小猫咪</p>
+                            <a href="同人图/第一部·爱在启明前 主角：西娅-25.2.13.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品4 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/第二部·早死后我成为他们的白月光 主角：斯塔尔曼.jpeg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">第二部·早死后我成为他们的白月光 主角：斯塔尔曼</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 小猫咪</p>
+                            <a href="同人图/第二部·早死后我成为他们的白月光 主角：斯塔尔曼.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品5-->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/第三部·冰焰双生 主角：莉安娜&拉金.png" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">第三部·冰焰双生 主角：莉安娜&拉金</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 小猫咪</p>
+                            <a href="同人图/第三部·冰焰双生 主角：莉安娜&拉金.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品6 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/白幕暖阳.jpg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">白幕暖阳</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <a href="同人图/白幕暖阳.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品7 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/拉莫迪亚逸闻选.jpeg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">拉莫迪亚逸闻选</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <a href="同人图/拉莫迪亚逸闻选.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品8 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/启明纪年野史.jpeg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">启明纪年野史</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <a href="同人图/启明纪年野史.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品9 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="同人图/爱在启明前.jpeg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">爱在启明前</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸽子猫</p>
+                            <a href="同人图/爱在启明前.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 小说作品10 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="fanfic">
+                        <!-- 小说封面占位图（可替换为实际封面图片） -->
+                        <img src="致拉莫迪亚.jpeg" 
+                            alt="欧皇角斗场成名战" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">致拉莫迪亚</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 鸣鸟</p>
+                            <a href="致拉莫迪亚.pdf" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                    <!-- 可复制上述结构添加更多小说作品 -->
+                </div>
+            </div>
+
+            <!-- 视频作品展示 -->
+            <div>
+                <h3 class="text-2xl font-display mb-6 flex items-center">
+                    <span class="bg-accent text-white px-3 py-1 rounded mr-3">replay</span>
+                    
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 视频作品：B站视频 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="video">
+                        <!-- B站视频封面（通过BV号获取封面地址） -->
+                        <img src="视频封面1.jpg" 
+                            alt="视频标题" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">为了2ac霸道少爷决定对32h没睡觉的可怜社畜狂热追求</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <a href="https://www.bilibili.com/video/BV1HHoiY9EGp/?spm_id_from=333.1387.homepage.video_card.click" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">观看视频</a>
+                        </div>
+                    </div>
+                    <!-- 视频作品：B站视频 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="video">
+                        <!-- B站视频封面（通过BV号获取封面地址） -->
+                        <img src="视频封面2.jpg" 
+                            alt="视频标题" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">黑暗料理茶话会</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <a href="https://www.bilibili.com/video/BV1KKZKYjEL5/?spm_id_from=333.1387.homepage.video_card.click" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">观看视频</a>
+                        </div>
+                    </div>
+                    <!-- 视频作品：B站视频 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="video">
+                        <!-- B站视频封面（通过BV号获取封面地址） -->
+                        <img src="视频封面3.jpg" 
+                            alt="视频标题" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">【DND跑团】血色拉莫迪亚之他逃她不追</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <a href="https://www.bilibili.com/video/BV1CLooYEEmP/?spm_id_from=333.1387.homepage.video_card.click" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">观看视频</a>
+                        </div>
+                    </div>
+                    <!-- 视频作品：B站视频 -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg art-card" data-category="video">
+                        <!-- B站视频封面（通过BV号获取封面地址） -->
+                        <img src="视频封面4.jpg" 
+                            alt="视频标题" 
+                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- 悬浮信息层 -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-xl font-medium text-white mb-2">莫比乌斯环跑步机</h3>
+                            <p class="text-gray-200 text-sm mb-4">by 景见</p>
+                            <a href="https://www.bilibili.com/video/BV1AodDYAED4/?spm_id_from=333.1387.homepage.video_card.click" 
+                            class="px-4 py-2 bg-accent text-white rounded-md mt-2" 
+                            target="_blank">观看视频</a>
+                        </div>
+                    </div>
+                    <!-- 可以按照上述结构添加更多视频作品 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 模态框 -->
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-primary');
+                navbar.classList.remove('bg-primary/90');
+            } else {
+                navbar.classList.add('bg-primary/90');
+                navbar.classList.remove('bg-primary');
+            }
+        });
+        
+        // 作品筛选功能
+        const filterButtons = document.querySelectorAll('.art-filter-btn');
+        const artCards = document.querySelectorAll('.art-card');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 更新按钮状态
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const filter = button.getAttribute('data-filter');
+                
+                // 筛选作品
+                artCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // 图片懒加载效果
+        document.addEventListener("DOMContentLoaded", function() {
+            const images = document.querySelectorAll('img');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('opacity-100');
+                        img.classList.remove('opacity-0');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            images.forEach(img => {
+                img.classList.add('transition-opacity', 'duration-500', 'opacity-0');
+                observer.observe(img);
+            });
+        });
+
+        // 查看全图功能
+        const viewFullImageButtons = document.querySelectorAll('.view-full-image');
+        const modal = document.getElementById('myModal');
+        const modalImg = document.getElementById('img01');
+        const closeBtn = document.querySelector('.close');
+
+        viewFullImageButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const imgSrc = button.getAttribute('data-src');
+                modal.style.display = 'block';
+                modalImg.src = imgSrc;
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

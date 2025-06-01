@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>熔冰铁心 - 势力信息</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#111827',
+                        secondary: '#e5e7eb',
+                        accent: '#3b82f6',
+                        steam: '#4b5563',
+                        frost: '#94a3b8',
+                        faction1: '#1e40af',
+                        faction2: '#9d174d',
+                        faction3: '#166534',
+                        faction4: '#854d0e',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Bangers', 'cursive'],
+                        steam: ['Special Elite', 'cursive']
+                    },
+                    backgroundImage: {
+                        'industrial-pattern': "url('https://picsum.photos/id/1067/1920/1080')",
+                        'hero-pattern': "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.4)), url('https://picsum.photos/id/1036/1920/1080')"
+                    },
+                    keyframes: {
+                        steam: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)', opacity: '0.7' },
+                            '50%': { transform: 'translateY(-10px) rotate(2deg)', opacity: '0.4' },
+                        }
+                    },
+                    animation: {
+                        steam: 'steam 4s ease-in-out infinite',
+                    }
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .text-shadow-lg {
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            }
+            .border-steam {
+                border-image: repeating-linear-gradient(45deg, #4b5563, #6b7280 10px) 1;
+            }
+            .bg-frosted {
+                backdrop-filter: blur(8px);
+            }
+            .scrollbar-hidden::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hidden {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .modal-enter {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            .modal-enter-active {
+                opacity: 1;
+                transform: scale(1);
+                transition: opacity 300ms, transform 300ms;
+            }
+            .modal-exit {
+                opacity: 1;
+            }
+            .modal-exit-active {
+                opacity: 0;
+                transition: opacity 300ms;
+            }
+            .faction-card {
+                transition: all 0.3s ease;
+                transform: perspective(1000px) rotateY(0deg);
+            }
+            .faction-card:hover {
+                transform: perspective(1000px) rotateY(5deg) translateY(-5px);
+                box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
+            }
+            
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-primary antialiased">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <nav class="bg-primary/90 text-white shadow-lg">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex justify-between items-center">
+                    <a href="#" class="flex items-center space-x-2">
+                        <!-- 替换为图片Logo -->
+                        <img src="logo.jpg" alt="熔冰铁心Logo" 
+                             class="w-10 h-10 rounded-full object-cover" 
+                             style="border: 2px solid #000000; box-shadow: 0 0 4px rgba(0,0,0,0.3);">
+                        <span class="text-xl font-steam tracking-wider">熔冰铁心</span>
+                    </a>
+                    
+                   <!-- 桌面导航 -->
+                    <div class="hidden md:flex space-x-8">
+                        <a href="index.html" class="font-medium hover:text-accent transition-colors duration-200">首页</a>
+                        <a href="plot-review.html" class="font-medium hover:text-accent transition-colors duration-200 border-b-2 border-accent">剧情回顾</a>
+                        <a href="characters.html" class="font-medium hover:text-accent transition-colors duration-200">人物卡</a>
+                        <a href="gallery.html" class="font-medium hover:text-accent transition-colors duration-200">同人作品</a>
+                    </div>
+                    
+                    <!-- 移动端菜单按钮 -->
+                    <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+                        <i class="fa fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                
+                <!-- 移动端导航菜单 -->
+                <div id="mobileMenu" class="md:hidden hidden mt-4 pb-2 space-y-3">
+                    <a href="index.html" class="font-medium hover:text-accent transition-colors duration-200">首页</a>
+                        <a href="plot-review.html" class="font-medium hover:text-accent transition-colors duration-200 border-b-2 border-accent">剧情回顾</a>
+                        <a href="characters.html" class="font-medium hover:text-accent transition-colors duration-200">人物卡</a>
+                        <a href="gallery.html" class="font-medium hover:text-accent transition-colors duration-200">同人作品</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主标题区域 -->
+    <div class="pt-24 pb-16 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-6xl font-display tracking-wider mb-6">拉莫迪亚剧情回顾</h1>
+                <p class="text-xl text-gray-300 mb-8">回忆我们在拉莫迪亚一路走来的冒险。</p>
+                <div class="w-32 h-1 bg-accent mx-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 势力信息卡片区域 -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-display tracking-wider text-primary mb-4">主要势力</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    拉莫迪亚的各方势力构成了这个冰封世界的权力结构，了解它们对生存至关重要
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 铸冰势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-faction1 to-blue-900">
+                        <i class="fa fa-shield text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">铸冰</h3>
+                            <span class="faction-tag bg-blue-100 text-blue-800">官方武装</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">拉莫拉莫迪亚的官方武装力量，直接效忠于奥布克雷男爵。分为城市守卫队和男爵亲卫队。</p>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+                                <i class="fa fa-users mr-2 text-blue-500"></i>
+                                子势力
+                            </h4>
+                            <ul class="space-y-3">
+                                <li>
+                                    <h5 class="font-semibold text-blue-700">城市守卫队</h5>
+                                    <p class="text-gray-600 text-sm">负责收税和维护治安，当然，重要的是前者。几乎都配备有枪械，但这子弹会不会真的打在罪有应得的人身上呢？</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-blue-700">男爵亲卫队</h5>
+                                    <p class="text-gray-600 text-sm">保护奥布雷克男爵，很少有人见到亲卫队。</p>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+                                <i class="fa fa-user mr-2 text-blue-500"></i>
+                                相关NPC
+                            </h4>
+                            <ul class="space-y-3">
+                                <li>
+                                    <h5 class="font-semibold text-blue-700">“奥布雷克男爵”</h5>
+                                    <p class="text-gray-600 text-sm">拉莫迪亚的最高统治者，但基本不见人也不管事，一般只收税。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-blue-700">萨拉赫</h5>
+                                    <p class="text-gray-600 text-sm">男爵亲卫队成员，对正义和善良有自己的理解，其养父为铁骑计划的参与者。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-blue-700">斯塔尔曼·冯·奥布雷克</h5>
+                                    <p class="text-gray-600 text-sm">前代奥布雷克男爵，废除人体实验改革的推行者，124年死于企业刺杀，其后以先知的形式存在，仍然假借施特罗的名义暗中控制着男爵亲卫队。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-blue-700">施特罗·冯·奥布雷克</h5>
+                                    <p class="text-gray-600 text-sm">名义上的现奥布雷克男爵，斯塔尔曼的弟弟，125年灵魂提取实验失败后变成企鹅游荡在冰原，直到被冒险者们从白幕后找回。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 熔火势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-orange-600 to-orange-900">
+                        <i class="fa fa-fire text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">熔火</h3>
+                            <span class="faction-tag bg-orange-100 text-orange-800">土匪组织/革命组织</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">（铸冰定性）拉莫迪亚史上最大土匪组织。（实际）由利奥纳多·马西伦与斯塔尔曼·奥布雷克共同建立的拉莫迪亚地下革命组织，新纽弗什滕堡的实际建立者，强烈反对四大企业。</p>
+                        
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+                                <i class="fa fa-user mr-2 text-orange-500"></i>
+                                相关NPC
+                            </h4>
+                            <ul class="space-y-3">
+                                <li>
+                                    <h5 class="font-semibold text-orange-700">利奥纳多·马西伦</h5>
+                                    <p class="text-gray-600 text-sm">熔火的创始人之一，25年带领旧纽弗什滕堡人民起义后建立了新纽弗什滕堡，并持续开展抵抗企业的活动。大奇械师，灰烬机关的创造者，机械器官技术的发明者，斯塔尔曼和施特罗的义兄。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-orange-700">斯塔尔曼·冯·奥布雷克</h5>
+                                    <p class="text-gray-600 text-sm">熔火的创始人之一，124年死于企业刺杀前将熔火彻底交给了利奥纳多·马西伦，在熔火初创阶段为熔火提供了较多金钱和物资帮助。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-orange-700">莉安娜</h5>
+                                    <p class="text-gray-600 text-sm">熔火成员，少数仍能使用铁骑系统的人，其前辈为铁骑计划参与者之一。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 越穹结社势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-purple-600 to-purple-900">
+                        <i class="fa fa-moon-o text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">越穹结社</h3>
+                            <span class="faction-tag bg-purple-100 text-purple-800">中立组织</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">无家可归者和狂想者的结社，实为拉莫迪亚专门收集异界知识的中立组织。</p>
+                        
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+                                <i class="fa fa-user mr-2 text-purple-500"></i>
+                                相关NPC
+                            </h4>
+                            <ul class="space-y-3">
+                                <li>
+                                    <h5 class="font-semibold text-purple-700">斯塔尔曼·冯·奥布雷克</h5>
+                                    <p class="text-gray-600 text-sm">越穹结社的创始人之一，以先知的形态一直管理着结社。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-purple-700">“引路人”</h5>
+                                    <p class="text-gray-600 text-sm">越穹结社的创始人之一和日常管理者，实为桂伦·流风的天使。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-purple-700">伯罗纳·梅塔莫尔（拉金霍姆）</h5>
+                                    <p class="text-gray-600 text-sm">越穹结社的重要成员，曾被暗影女王的使者附身，后成为冒险者的重要同伴。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 博士势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-faction2 to-pink-900">
+                        <i class="fa fa-flask text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">莫登海姆博士</h3>
+                            <span class="faction-tag bg-pink-100 text-pink-800">“救世主”</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">拉莫迪亚的救世主，科学成就斐然，引领着整个科研潮流。在各个领域都有涉猎，最出众的领域是生物科学。</p>
+                        
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+                                <i class="fa fa-user mr-2 text-pink-500"></i>
+                                相关NPC
+                            </h4>
+                            <ul class="space-y-3">
+                                <li>
+                                    <h5 class="font-semibold text-pink-700">小博士（凯撒）</h5>
+                                    <p class="text-gray-600 text-sm">被博士在克隆实验中分离出来的一部分，携带了一部分博士的灵魂。心性如同孩童一般，对很多事情一无所知。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-pink-700">伊莉丝</h5>
+                                    <p class="text-gray-600 text-sm">与博士一起从异世界来到拉莫迪亚的异乡人，永恒之心的载体和博士疯狂的爱的承受者，因为博士杀了自己所有同伴而憎恨博士，却又不得不活在世界上。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-pink-700">阿斯米娅</h5>
+                                    <p class="text-gray-600 text-sm">博士的助手，刺杀博士失败后随冒险者逃走。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 白傲罗戈（Biologie）势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-faction2 to-pink-900">
+                        <i class="fa fa-flask text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">白傲罗戈</h3>
+                            <span class="faction-tag bg-pink-100 text-pink-800">生物科技</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">生物科学企业，业务包括生物改造，医疗。四大企业共同决定了拉莫迪亚的政治。</p>
+                        
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+                                <i class="fa fa-user mr-2 text-pink-500"></i>
+                                相关NPC
+                            </h4>
+                            <ul class="space-y-3">
+                                <li>
+                                    <h5 class="font-semibold text-pink-700">梅塔莫尔家族</h5>
+                                    <p class="text-gray-600 text-sm">伯罗纳·梅塔莫尔的出身家族，为了实验漠视生命。</p>
+                                </li>
+                                <li>
+                                    <h5 class="font-semibold text-pink-700">阿玛尔吉家族</h5>
+                                    <p class="text-gray-600 text-sm">雷古路斯·阿玛尔吉的出身家族，传统生物科学研究家族，有近亲结婚的传统。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 阿克米（Alchemie）势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-amber-600 to-amber-900">
+                        <i class="fa fa-fire text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">阿克米</h3>
+                            <span class="faction-tag bg-amber-100 text-amber-800">炼金术</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">炼金术企业，业务包括材料、食品、药品。四大企业共同决定了拉莫迪亚的政治。</p>
+                    </div>
+                </div>
+                
+                <!-- 瓦夫（Waffe）势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-gray-600 to-gray-900">
+                        <i class="fa fa-bomb text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">瓦夫</h3>
+                            <span class="faction-tag bg-gray-100 text-gray-800">军火制造</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">枪炮装甲企业，四大企业共同决定了拉莫迪亚的政治。</p>
+                    </div>
+                </div>
+                
+                <!-- 曼奇斯（Maschinenbau）势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-gray-700 to-gray-900">
+                        <i class="fa fa-cogs text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">曼奇斯</h3>
+                            <span class="faction-tag bg-gray-100 text-gray-800">机械制造</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">机械制造企业，四大企业共同决定了拉莫迪亚的政治。</p>
+                        
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+                                <i class="fa fa-user mr-2 text-gray-500"></i>
+                                相关NPC
+                            </h4>
+                            <ul class="space-y-3">
+                                <li>
+                                    <h5 class="font-semibold text-gray-700">阿斯米娅</h5>
+                                    <p class="text-gray-600 text-sm">曼奇斯的机械师，刺杀博士失败后随冒险者逃走。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 猎血势力卡片 -->
+                <div class="faction-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 relative">
+                    <div class="faction-badge bg-gradient-to-br from-red-600 to-red-900">
+                        <i class="fa fa-crosshairs text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">猎血</h3>
+                            <span class="faction-tag bg-red-100 text-red-800">佣兵组织</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">民间武装力量，中立组织。给钱什么都干。最主要的业务（明面上）是捕鲸，给城市带来大量的油和肉。里面的佣兵也有等级之分，"一分钱一分血"。</p>
+                        
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+                                <i class="fa fa-user mr-2 text-red-500"></i>
+                                相关NPC
+                            </h4>
+                            <ul class="space-y-3">
+                                <li>
+                                    <h5 class="font-semibold text-red-700">颅骨、獠牙、呜呜呜三人组</h5>
+                                    <p class="text-gray-600 text-sm">雪原上探险的佣兵，呜呜呜为雪人一组最后的雪人。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 新增的剧情回顾部分 -->
+    <section class="py-16 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-display tracking-wider mb-6">详细剧情回顾</h2>
+                <p class="text-xl text-gray-300 mb-8">探索完整的冒险旅程，回顾每一个关键决策和重要时刻</p>
+                
+                <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 shadow-xl max-w-3xl mx-auto">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div class="text-left">
+                            <h3 class="text-2xl font-bold mb-4">熔冰铁心完整剧情记录</h3>
+                            <p class="text-gray-300 mb-6">
+                                以下为冒险者冒险旅程笔记，包含各章节的详细描述、关键决策点、角色互动和剧情发展。点击下方按钮即可查看完整的剧情回顾文档。
+                            </p>
+                            <ul class="space-y-2 text-gray-300 text-left mb-6">
+                                <li class="flex items-center">
+                                    <i class="fa fa-check-circle text-green-400 mr-2"></i>
+                                    <span>序章：逃离实验室</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-check-circle text-green-400 mr-2"></i>
+                                    <span>第一章：纽弗什滕堡篇</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-check-circle text-green-400 mr-2"></i>
+                                    <span>第二章：卢登多夫篇</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-check-circle text-green-400 mr-2"></i>
+                                    <span>第三章：锚点篇</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-check-circle text-green-400 mr-2"></i>
+                                    <span>第四章：决战篇</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex-shrink-0">
+                            <div class="bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-600 mb-6">
+                                <i class="fa fa-file-text-o text-5xl text-blue-400 mb-4"></i>
+                                <h4 class="font-bold text-lg">剧情文档</h4>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://docs.qq.com/sheet/DUWdPVFVjdEFSeWNh?tab=BB08J2" 
+                       target="_blank"
+                       class="inline-block bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <i class="fa fa-external-link mr-2"></i>
+                        查看完整剧情回顾
+                    </a>
+                    
+                    <p class="text-gray-400 text-sm mt-6">
+                        * 此文档由腾讯文档托管，点击按钮将在新标签页中打开
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-primary');
+                navbar.classList.remove('bg-primary/90');
+            } else {
+                navbar.classList.add('bg-primary/90');
+                navbar.classList.remove('bg-primary');
+            }
+        });
+        
+        // 卡片悬停效果增强
+        document.querySelectorAll('.faction-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const badge = card.querySelector('.faction-badge');
+                badge.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                const badge = card.querySelector('.faction-badge');
+                badge.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    </script>
+</body>
+</html>
